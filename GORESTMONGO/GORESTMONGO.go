@@ -54,7 +54,7 @@ func insert(w http.ResponseWriter, r *http.Request){
 func welcome(w http.ResponseWriter, r *http.Request){
 	fmt.Fprintf(w, "Welcome to Booking! To insert a record change url to localhost:3000/insert and hit :)")
 }
-
+//Handle Requests
 func handleRequests(){
 	http.HandleFunc("/insert", insert)
 	http.HandleFunc("/", welcome)
