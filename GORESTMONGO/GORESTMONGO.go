@@ -17,6 +17,7 @@ type Booking struct{
 	Name string 
 }
 
+//To insert a document to mongo
 func insert(w http.ResponseWriter, r *http.Request){
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 	client, err := mongo.Connect(context.TODO(), clientOptions)
@@ -49,16 +50,17 @@ func insert(w http.ResponseWriter, r *http.Request){
 	fmt.Println("Connection to MongoDB closed.")
 }
 
+//home page
 func welcome(w http.ResponseWriter, r *http.Request){
 	fmt.Fprintf(w, "Welcome to Booking! To insert a record change url to localhost:3000/insert and hit :)")
 }
 
 func handleRequests(){
 	http.HandleFunc("/insert", insert)
-	http.HandleFunc("/welcome", welcome)
+	http.HandleFunc("/", welcome)
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }
 
 func main(){
-	handleRequests()
+	handleRequests() 
 }
