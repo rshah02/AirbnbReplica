@@ -6,10 +6,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
 	"../models"
-
-
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -49,6 +47,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	
 
 	fmt.Println("Connected to MongoDB!")
 
@@ -65,7 +64,6 @@ func CreateProperty(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	var task models.Property
 	_ = json.NewDecoder(r.Body).Decode(&task)
-	// fmt.Println(task, r.Body)
 	insertOneListing(task)
 	json.NewEncoder(w).Encode(task)
 }
@@ -89,6 +87,7 @@ func insertOneListing(task models.Property) {
 	}
 
 	fmt.Println("Inserted a Single Record ", insertResult.InsertedID)
+
 }
 
 func getAllProperty() []primitive.M {
@@ -118,6 +117,50 @@ func getAllProperty() []primitive.M {
 }
 
 
+func UpdateProperty(w http.ResponseWriter, r *http.Request) {
+	personID := mux.Vars(r)["id"]
+	var listing models.Property
+	_ = json.NewDecoder(r.Body).Decode(&listing)
+	update(listing, personID)
+
+}
+
+func update(listing models.Property, personID string) {
+	filter := bson.M{"propertyid": personID}
+	update := bson.M{"$set": bson.M{"title": listing.Title, "price" : listing.Price,"description" : listing.Description},}
+	result := collection.FindOneAndUpdate(context.Background(), filter, update)
+	
+	fmt.Println(result)
+}
+
+
+func DeleteProperty(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	
+	params := mux.Vars(r)["id"]
+	var listing1 models.Property
+	_ = json.NewDecoder(r.Body).Decode(&listing1)
+	deleteOneTask(listing1, params)	
+
+}
+
+
+// delete one task from the DB, delete by ID
+func deleteOneTask(listing1 models.Property, params string) {
+	
+	filter := bson.M{"propertyid": params}
+	result, err := collection.DeleteOne(context.Background(), filter)
+	
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(result)
+}
+
 
 
 
@@ -127,14 +170,6 @@ func getAllProperty() []primitive.M {
 
 
 /*
-
-// GetAllTask get all the task route
-func GetAllTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	payload := getAllTask()
-	json.NewEncoder(w).Encode(payload)
-}
 
 
 // TaskComplete update task route
@@ -186,43 +221,6 @@ func DeleteAllTask(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// get all task from the DB and return it
-func getAllTask() []primitive.M {
-	cur, err := collection.Find(context.Background(), bson.D{{}})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var results []primitive.M
-	for cur.Next(context.Background()) {
-		var result bson.M
-		e := cur.Decode(&result)
-		if e != nil {
-			log.Fatal(e)
-		}
-		// fmt.Println("cur..>", cur, "result", reflect.TypeOf(result), reflect.TypeOf(result["_id"]))
-		results = append(results, result)
-
-	}
-
-	if err := cur.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	cur.Close(context.Background())
-	return results
-}
-
-// Insert one task in the DB
-func insertOneTask(task models.ToDoList) {
-	insertResult, err := collection.InsertOne(context.Background(), task)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Inserted a Single Record ", insertResult.InsertedID)
-}
 
 // task complete method, update task's status to true
 func taskComplete(task string) {
