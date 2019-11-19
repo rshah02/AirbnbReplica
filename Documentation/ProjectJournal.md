@@ -13,11 +13,11 @@ Project journal:
 
 **Initial Responsibilities:**
 
-Frontend development - Rohan
-CI/CD Tools - Mrinalini
-Kubernetes - Siddesh
-Docker - Apeksha
-API Gateway - Sindhu
+- Frontend development - Rohan
+- CI/CD Tools - Mrinalini
+- Kubernetes - Siddesh
+- Docker - Apeksha
+- API Gateway - Sindhu
 
 **To Do:**
 
