@@ -29,7 +29,11 @@ Project journal:
 	- Implement user authentication using JWT 
 
 - Rohan:
-	
+	-Create an API contract
+        -Develop Backend API for User profile
+	-Build frontend Web application using React.js
+	-Integrate all the APIs with frontend 
+	-Deploy frontend on Heroku platform
 - Siddesh:
 
 - Sindhu:
