@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+//	"time"
 	"os"
 	"net/http"
 	"../models"
@@ -16,18 +17,22 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
         "github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3" 
-        "github.com/aws/aws-sdk-go/service/s3/s3manager"   
+        "github.com/aws/aws-sdk-go/service/s3/s3manager" 
+	"github.com/aws/aws-sdk-go/aws/awserr"  
+	"github.com/nu7hatch/gouuid"
 )
 
 // DB connection string for localhost mongoDB
 
-const connectionString = "mongodb+srv://admin:admin@cluster0-uvain.mongodb.net/test?retryWrites=true&w=majority"
+const connectionString = "mongodb+srv://admin:admin@cluster0-f9fkk.mongodb.net/test?retryWrites=true&w=majority"
+//const connectionString = "mongodb -u admin -p mongo1234 --authenticationDatabase admin mongodb://primary:27017,secondary1:27017,secondary2:27017/?replicaSet=cmpe281"
+//const connectionString = "mongodb://admin:mongo1234@10.0.1.44:27017/?replicaSet=cmpe281"
 
 // Database Name
-const dbName = "test"
+const dbName = "Property"
 
 // Collection name
-const collName = "listing"
+const collName = "Listings"
 
 // collection object/instance
 var collection *mongo.Collection
@@ -69,9 +74,17 @@ func CreateProperty(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	u, err := uuid.NewV4()
+	/*params := mux.Vars(r)
+	if err != nil {
+		log.Fatal(err)
+	}*/
+	var propid=u.String()
 	var task models.Property
 	_ = json.NewDecoder(r.Body).Decode(&task)
-
+	task.PropertyId = propid
+	
+	
 	fmt.Println("I have decoded the request", task.Image)
 	file, err := os.Open(task.Image)
 	if err != nil {
@@ -113,7 +126,7 @@ func insertOneListing(task models.Property) {
 }
 
 
-// GetAllProperty get all the property route
+//GetAllProperty get all the property route
 func GetAllProperty(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -146,27 +159,26 @@ func getAllProperty() []primitive.M {
 	cur.Close(context.Background())
 	return results
 }
-
 //Update a single property
 
 
 func UpdateProperty(w http.ResponseWriter, r *http.Request) {
-	personID := mux.Vars(r)["id"]
+	temp := mux.Vars(r)["id"]
+	fmt.Println("my temp is : ",temp)
 	var listing models.Property
 	_ = json.NewDecoder(r.Body).Decode(&listing)
-	update(listing, personID)
+	update(listing, temp)
 
 }
 
-func update(listing models.Property, personID string) {
-	filter := bson.M{"propertyid": personID}
-	update := bson.M{"$set": bson.M{"title": listing.Title, "price" : listing.Price,"description" : listing.Description},}
+func update(listing models.Property, temp string) {
+	filter := bson.M{"propertyid": temp}
+	update := bson.M{"$set": bson.M{ "title": listing.Title, "description" : listing.Description,"street" : listing.StreetAddr,"city" : listing.City,"country" : 					listing.Country,"zip" : listing.ZipCode,"bed" : listing.Bedrooms,"bath" : listing.Bathrooms,"accomodates" : listing.Accomodates,"currency" : 					listing.Currency,"price" : listing.Price, "minstay" : listing.MinStay,"maxstay" : listing.MaxStay, "start" : listing.StartDate,"end" : 					listing.EndDate },}
 	result := collection.FindOneAndUpdate(context.Background(), filter, update)
-	
+	fmt.Println("hi" , listing.PropertyType.Whole)	
 	fmt.Println(result)
+
 }
-
-
 //Delete a single property
 
 func DeleteProperty(w http.ResponseWriter, r *http.Request) {
@@ -259,7 +271,39 @@ func GetProperty(w http.ResponseWriter, r *http.Request) {
 	// Print out data from the document result
 		json.NewEncoder(w).Encode(task)
 	}
+	
+	sess, err := session.NewSession(&aws.Config{
+	Region: aws.String("us-east-1")},
+	)
+	svc := s3.New(sess)
+	input := &s3.GetObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(task.Image),
+	}
 
+	result, err := svc.GetObject(input)
+	if err != nil {
+		if aerr, ok := err.(awserr.Error); ok {
+			switch aerr.Code() {
+			case s3.ErrCodeNoSuchKey:
+				fmt.Println(s3.ErrCodeNoSuchKey, aerr.Error())
+			default:
+				fmt.Println(aerr.Error())
+			}
+		} else {
+			// Print the error, cast err to awserr.Error to get the Code and
+			// Message from an error.
+			fmt.Println(err.Error())
+		}
+		
+	}
+
+	fmt.Println(result)
+}
+
+func exitErrorf(msg string, args ...interface{}) {
+    fmt.Fprintf(os.Stderr, msg+"\n", args...)
+    os.Exit(1)
 }
 
 func GetManyProperty(w http.ResponseWriter, r *http.Request) {
@@ -274,7 +318,7 @@ func GetManyProperty(w http.ResponseWriter, r *http.Request) {
 	var listing models.Property
 		_ = json.NewDecoder(r.Body).Decode(&listing)
 
-	filter := bson.M{"username": params}
+	filter := bson.M{"userid": params}
 
 	// find all documents
 	cursor, err := collection.Find(context.Background(), filter)
@@ -289,13 +333,34 @@ func GetManyProperty(w http.ResponseWriter, r *http.Request) {
 	    if err := cursor.Decode(&p); err != nil {
 	    	log.Fatal(err)
 	    }
-	    json.NewEncoder(w).Encode(p)
-	}
-
-	// check if the cursor encountered any errors while iterating 
-	if err := cursor.Err(); err != nil {
-		log.Fatal(err)
-	}
+	    	    
+	    sess, err := session.NewSession(&aws.Config{
+            Region: aws.String("us-east-1")},
+        	)
+	    svc := s3.New(sess)
+	    
+	    input := &s3.GetObjectInput{
+			Bucket: aws.String(bucket),
+			Key:    aws.String(p.Image),
+		}
+    	
+	     result, err := svc.GetObject(input)
+	     
+	     json.NewEncoder(w).Encode(p)
+	     if err != nil {
+		fmt.Println(err.Error())
+	     }
+	     
+	    // fmt.Println("Printing result")
+	     fmt.Println(result)
+	     }
+	     
+	     
+	     	    
+		// check if the cursor encountered any errors while iterating 
+	     if err := cursor.Err(); err != nil {
+			log.Fatal(err)
+	     }
 	
 
 }
