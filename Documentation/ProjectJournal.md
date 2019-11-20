@@ -22,6 +22,10 @@ Project journal:
 **To Do:**
 
 - Apeksha:
+	Create/update/get/delete Listings API
+	s3 bucket implementation for all CRUD operations -
+	Kubernetes Deployment 
+	VPC Link	
 
 - Mrinalini:
 	- Evaluate CI/CD Tools 
@@ -37,3 +41,10 @@ Project journal:
 - Siddesh:
 
 - Sindhu:
+	- Intial POC using GO+MONGO+REST -> Done
+	- Docker configuration for the Go API -> Done
+	- Backend API Development for Booking -> Done
+	- Backend API integrating with mongo cluster -> In Progress
+	- SNS Implementation as part of Booking to notify both Propery admin and user regarding booking -> In Progress
+	- API Gateway configuration -> In Progress
+	- AWS Cloud Formation - Exploring
