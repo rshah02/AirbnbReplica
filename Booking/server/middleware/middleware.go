@@ -167,7 +167,7 @@ func DeleteBooking(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	deleteOneBooking(params["userId"], params["bookingId"])
-	json.NewEncoder(w).Encode(struct{ message string }{"Deleted"})
+	json.NewEncoder(w).Encode(struct{ Message string }{"Deleted"})
 
 }
 
