@@ -14,5 +14,6 @@ type Booking struct {
 	CheckOutDate string `json:"CheckOutDate" bson:"CheckOutDate"`
 	Message string `json:"Message" bson:"Message"`
 	Amount string  `json:"Amount" bson:"Amount"`
+	EMail string  `json:"EMail" bson:"EMail"`
 }
 

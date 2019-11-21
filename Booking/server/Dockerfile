@@ -1,25 +1,28 @@
+
 FROM golang:latest
 
-# Add Maintainer Info
-LABEL maintainer="Rajeev Singh <rajeevhub@gmail.com>"
-
-# Set the Current Working Directory inside the container
-WORKDIR /app
-
-# Copy go mod and sum files
-COPY go.mod go.sum ./
-
-# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
-RUN go mod download
-
-# Copy the source from the current directory to the Working Directory inside the container
-COPY . .
-
-# Build the Go app
-RUN go build -o main .
+MAINTAINER Sindhu
 
 # Expose port 8080 to the outside world
 EXPOSE 8080
+
+WORKDIR /app
+
+COPY . .
+
+#Getting required imports
+RUN go get github.com/aws/aws-sdk-go/aws
+RUN go get github.com/aws/aws-sdk-go/aws/session
+RUN go get github.com/aws/aws-sdk-go/service/sns
+RUN go get github.com/gorilla/mux
+RUN go get github.com/nu7hatch/gouuid
+RUN go get go.mongodb.org/mongo-driver/bson
+RUN go get go.mongodb.org/mongo-driver/bson/primitive
+RUN go get go.mongodb.org/mongo-driver/mongo
+RUN go get go.mongodb.org/mongo-driver/mongo/options
+
+# Build the Go app
+RUN go build -o main .
 
 # Command to run the executable
 CMD ["./main"]

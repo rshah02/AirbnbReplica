@@ -8,7 +8,7 @@ Project journal:
 	Profile page for customer and host - Rohan
 	Posting ad/Removal of accomodation by host - Apeksha
 	Search - Siddesh
-	Booking/Cancelling accomodation - Sindhu
+	Booking/Cancelling/Updation accomodation - Sindhu
 
 
 **Initial Responsibilities:**
@@ -45,10 +45,10 @@ Project journal:
 	- Kubernetes Deployment - In Progress
 
 - Sindhu:
-	- Intial POC using GO+MONGO+REST -> Done
-	- Docker configuration for the Go API -> Done
-	- Backend API Development for Booking -> Done
-	- Backend API integrating with mongo cluster -> In Progress
-	- SNS Implementation as part of Booking to notify both Propery admin and user regarding booking -> In Progress
+	- Intial POC using GO+MONGO+REST -> Done (11-Nov)
+	- Docker configuration for the Go API -> Done (13-Nov)
+	- Backend API Development for Booking -> Done (16-Nov)
+	- Backend API integrating with mongo cluster -> Done (19-Nov)
+	- SNS Implementation as part of Booking,Updation and Deletion (To notify user with booking ID)-> Done (19-Nov)
 	- API Gateway configuration -> In Progress
 	- AWS Cloud Formation - Exploring
