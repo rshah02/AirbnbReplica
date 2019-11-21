@@ -22,10 +22,10 @@ Project journal:
 **To Do:**
 
 - Apeksha:
-	Create/update/get/delete Listings API
-	s3 bucket implementation for all CRUD operations -
-	Kubernetes Deployment 
-	VPC Link	
+	- Create/update/get/delete Listings API
+	- s3 bucket implementation for all CRUD operations -
+	- Kubernetes Deployment 
+	- VPC Link	
 
 - Mrinalini:
 	- Evaluate CI/CD Tools 
