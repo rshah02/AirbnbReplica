@@ -39,6 +39,10 @@ Project journal:
 	-Integrate all the APIs with frontend 
 	-Deploy frontend on Heroku platform
 - Siddesh:
+	- Backend API development for Search - Done
+	- Backend API intergration with mongo cluster - Done
+	- VPC Peering - In Progress
+	- Kubernetes Deployment - In Progress
 
 - Sindhu:
 	- Intial POC using GO+MONGO+REST -> Done
