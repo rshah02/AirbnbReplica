@@ -23,7 +23,9 @@ import (
 )
 
 //const connectionString = "mongodb://localhost:27017"
-const connectionString = "mongodb://admin:admin@primary:27017/admin?replicaSet=cmpe281"
+//const connectionString = "mongodb://admin:admin@primary:27017/admin?replicaSet=cmpe281"
+
+const connectionString = "mongodb://admin:admin@35.167.83.0:27017/?replicaSet=cmpe281&connect=direct"
 
 const dbName = "admin"
 
