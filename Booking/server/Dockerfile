@@ -6,8 +6,8 @@ MAINTAINER Sindhu
 # Expose port 8080 to the outside world
 EXPOSE 3000
 
-RUN mkdir -p /home/centos/.aws
-ADD credentials /home/centos/.aws/credentials
+#RUN mkdir -p /home/centos/.aws
+#ADD credentials /home/centos/.aws/credentials
 #ADD ./build/libs/starbucks-all.jar /srv/starbucks-all.jar
 
 WORKDIR /app
@@ -24,6 +24,7 @@ RUN go get go.mongodb.org/mongo-driver/bson
 RUN go get go.mongodb.org/mongo-driver/bson/primitive
 RUN go get go.mongodb.org/mongo-driver/mongo
 RUN go get go.mongodb.org/mongo-driver/mongo/options
+RUN go get github.com/gorilla/handlers
 RUN export AWS_ACCESS_KEY_ID=AKIAYLO2AOZ5NT3LRPT7
 RUN export AWS_SECRET_ACCESS_KEY=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
 
