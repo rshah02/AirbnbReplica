@@ -29,15 +29,17 @@ Project journal:
 
 - Mrinalini:
 	- Evaluate CI/CD Tools 
-	- Develop backend API for login/sign up
-	- Implement user authentication using JWT 
+	- Develop backend API for login/sign up	
+	- Setting up mongo db cluster and integration with user apis
+	- Investigate firebase and Auth0 authentication mechanisms
+	- Implement user authentication using firebase 
 
 - Rohan:
-	-Create an API contract
-        -Develop Backend API for User profile
-	-Build frontend Web application using React.js
-	-Integrate all the APIs with frontend 
-	-Deploy frontend on Heroku platform
+	- Create an API contract
+    - Develop Backend API for User profile
+	- Build frontend Web application using React.js
+	- Integrate all the APIs with frontend 
+	- Deploy frontend on Heroku platform
 - Siddesh:
 	- Backend API development for Search - Done
 	- Backend API intergration with mongo cluster - Done

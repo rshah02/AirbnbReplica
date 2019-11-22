@@ -12,14 +12,17 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	firebase "firebase.google.com/go"
 )
 
 var mongodb_server = "127.0.0.1"
-var mongodb_database = "admin"
+var mongodb_database = "airbnbClonedb"
 var mongodb_collection = "user"
 var mongo_admin_database = "admin"
 var mongo_username = "admin"
 var mongo_password = "cmpe281"
+
+var app *App
 
 func pingHandler(w http.ResponseWriter, req *http.Request) {
 	log.Print("hello")
@@ -82,8 +85,8 @@ func RegisterUser(w http.ResponseWriter, req *http.Request) {
 }
 
 func UserSignIn(w http.ResponseWriter, req *http.Request) {
-	var person User
-	_ = json.NewDecoder(req.Body).Decode(&person)
+	var userData User
+	_ = json.NewDecoder(req.Body).Decode(&userData)
 	info := &mgo.DialInfo{
 		Addrs:    []string{mongodb_server},
 		Timeout:  60 * time.Second,
@@ -101,10 +104,10 @@ func UserSignIn(w http.ResponseWriter, req *http.Request) {
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(mongodb_database).C(mongodb_collection)
-	query := bson.M{"email": person.Email,
-		"password": person.Password}
+	query := bson.M{"email": userData.Email,
+		"password": userData.Password}
+	
 	var user User
-
 	err = c.Find(query).One(&user)
 	if err == mgo.ErrNotFound {
 		ErrorWithJSON(w, "Login Failed", http.StatusUnauthorized)
@@ -116,6 +119,18 @@ func UserSignIn(w http.ResponseWriter, req *http.Request) {
 		"LastName": user.LastName,
 		"UserId":      user.UserId}
 
+	// create tokens
+	client, err := app.Auth(context.Background())
+	if err != nil {
+		log.Fatal("error getting Auth client: %v\n", err)
+	}
+
+	token, err := client.CustomToken(context.Background(), user.UserId)
+	if err != nil {
+		log.Fatal("error minting custom token: %v\n", err)
+	}
+	log.Printf("Got custom token: %v\n", token)	
+		
 	respBody, err := json.MarshalIndent(userData, "", "  ")
 	ResponseWithJSON(w, respBody, http.StatusOK)
 }
@@ -164,13 +179,39 @@ func DeleteUser(w http.ResponseWriter, req *http.Request) {
 	ResponseWithJSON(w, respBody, http.StatusOK)
 }
 
+func authenticationMiddleware(au http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	//verify token
+	token, err := client.VerifyIDToken(context.Background(), idToken)
+	if err != nil {
+        log.Fatal("error verifying ID token: %v\n", err)
+	}
+
+	log.Printf("Verified ID token: %v\n", token)
+	})
+}
+
+func initfirebase() {
+
+	// initialize firebase sdk with service account
+	opt := option.WithCredentialsFile("airbnb-clone.json")
+	app, err := firebase.NewApp(context.Background(), nil, opt)
+	if err != nil {
+        log.Fatal("error initializing app: %v\n", err)
+	}
+}		
+	
+
 func main() {
-	log.Print("hello")
+	log.Print("hello")		
+	
 	router := mux.NewRouter()
 	router.HandleFunc("/users/signup", RegisterUser).Methods("POST")
 	router.HandleFunc("/users/signin", UserSignIn).Methods("POST")
-	router.HandleFunc("/users/{id}", DeleteUser).Methods("DELETE")
+	router.HandleFunc("/users/{id}", authenticationMiddleware(DeleteUser)).Methods("DELETE")
 	// testing
-    router.HandleFunc("/users/ping", pingHandler).Methods("GET")	
+    router.HandleFunc("/users/ping", pingHandler).Methods("GET")
+	
+	initfirebase()	
 	log.Fatal(http.ListenAndServe(":3000", router))
 }
