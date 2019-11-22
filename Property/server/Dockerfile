@@ -22,6 +22,10 @@ RUN go get github.com/aws/aws-sdk-go/service/s3
 RUN go get github.com/aws/aws-sdk-go/service/s3/s3manager
 RUN go get github.com/aws/aws-sdk-go/aws/awserr
 RUN go get github.com/nu7hatch/gouuid
+RUN go get github.com/gorilla/handlers
+
+ENV AWS_ACCESS_KEY_ID=AKIAUUSGN2DSTUQJP67K
+ENV AWS_SECRET_ACCESS_KEY=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
 
 # Build the Go app
 RUN go build -o main .

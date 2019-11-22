@@ -3,8 +3,8 @@
 # Container
 
 ACCOUNT=""
-CONTAINER="listing"
-VERSION="1.0"
+CONTAINER="property"
+VERSION="v1"
 
 # Shell Variables
 
