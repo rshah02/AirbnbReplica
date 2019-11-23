@@ -7,4 +7,5 @@ build:
 	go get go.mongodb.org/mongo-driver/mongo
 	go get go.mongodb.org/mongo-driver/mongo/options
 	go get github.com/go-redis/redis
+	go get github.com/gorilla/handlers
 	go build -o main .
