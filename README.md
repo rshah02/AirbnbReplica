@@ -36,7 +36,7 @@ It is similar to AIRBNB where a propert owner and customer can login. Property o
 
 9. **S3**: Property listing images are stored in S3 bucket and retrieved on GET.
 
-10. **FireBase**: For authentication purposes.
+10. **FireBase**: Evaluated Auth0 and firebase authentication mechanisms. Implemented firebase authentication.
 
 11. AWS API Gateway: All the LB's and kubernetis IP is configured in API Gateway.
 
@@ -68,6 +68,7 @@ It is similar to AIRBNB where a propert owner and customer can login. Property o
 	- Evaluate CI/CD Tools 
 	- Develop backend API for login/sign up	
 	- Setting up mongo db cluster and integration with user apis
+	- Deploying to docker instances
 	- Investigate firebase and Auth0 authentication mechanisms
 	- Implement user authentication using firebase 
 
