@@ -28,6 +28,9 @@ RUN go get github.com/gorilla/handlers
 RUN export AWS_ACCESS_KEY_ID=AKIAYLO2AOZ5NT3LRPT7
 RUN export AWS_SECRET_ACCESS_KEY=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
 
+ENV AWS_ACCESS_KEY_ID=AKIAYLO2AOZ5NT3LRPT7
+ENV AWS_SECRET_ACCESS_KEY=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
+
 # Build the Go app
 RUN go build -o main .
 
