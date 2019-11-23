@@ -8,17 +8,19 @@ EXPOSE 3000
 
 WORKDIR /app
 
-COPY . .
+COPY main /app 
+
+#COPY . .
 
 #Getting required imports
-RUN go get github.com/gorilla/mux
-RUN go get github.com/satori/go.uuid
-RUN go get gopkg.in/mgo.v2
-RUN go get gopkg.in/mgo.v2/bson
-RUN go get firebase.google.com/go
+#RUN go get github.com/gorilla/mux
+#RUN go get github.com/satori/go.uuid
+#RUN go get gopkg.in/mgo.v2
+#RUN go get gopkg.in/mgo.v2/bson
+#RUN go get firebase.google.com/go
 
 # Build the Go app
-RUN go build -o main .
+#RUN go build -o main .
 
 # Command to run the executable
 CMD ["./main"]

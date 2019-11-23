@@ -6,6 +6,7 @@ get-dependencies:
 	go get -v gopkg.in/mgo.v2
 	go get -v gopkg.in/mgo.v2/bson
 	go get firebase.google.com/go
+	go get github.com/gorilla/handlers
 	
 build: get-dependencies
 	  go build -o main .
