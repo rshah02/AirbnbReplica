@@ -113,7 +113,6 @@ func DoBooking(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	u, err := uuid.NewV4()
-	params := mux.Vars(r)
 	if err != nil {
                 log.Fatal(err)
         } 
@@ -121,7 +120,6 @@ func DoBooking(w http.ResponseWriter, r *http.Request) {
 	var b models.Booking
 	_ = json.NewDecoder(r.Body).Decode(&b)
 	b.BookingID = bookID
-	b.PropertyID = params["proprtyId"]
 	 fmt.Println(b.BookingID, r.Body)
 	doOneBooking(b)
 	sess, err := session.NewSession(&aws.Config{
@@ -145,7 +143,6 @@ func DoBooking(w http.ResponseWriter, r *http.Request) {
         fmt.Println(err.Error())
         os.Exit(1)
     }
-
     fmt.Println(*sub.SubscriptionArn)
     result, err := svc.Publish(&sns.PublishInput{
         Message:  aws.String(b.BookingID),
