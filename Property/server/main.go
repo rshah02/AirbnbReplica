@@ -16,7 +16,7 @@ func main() {
 	originsOk := h.AllowedOrigins([]string{"*"})
 	methodsOk := h.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT","OPTIONS"})
 
-	router.HandleFunc("/property", middleware.GetAllProperty).Methods("GET")
+//	router.HandleFunc("/property", middleware.GetAllProperty).Methods("GET")
 	router.HandleFunc("/property/addProperty", middleware.CreateProperty).Methods("POST")
 	router.HandleFunc("/property/{id}", middleware.GetProperty).Methods("GET")
 	router.HandleFunc("/property1/{user}", middleware.GetManyProperty).Methods("GET")

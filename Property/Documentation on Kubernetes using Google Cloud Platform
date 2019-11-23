@@ -1,0 +1,75 @@
+*GOOGLE KUBERNETES ENGINE*
+
+Gcloud Kubernetes Engine provides a managed Kubernetes environment to deploy and scale containerized applications in the form of clusters. Continuous modifications and re-deployment without bring down the cluster is made easy in Kubernetes. It automatically manages the underlying cloud resources and performs inbuilt load balancing, autoscaling etc. 
+
+*Steps to deploy a docker container on GKE is as follows -
+
+>Open Google Cloud Platform from your browser, create a GCP project
+Make a Kubernetes cluster on GCP platform. This can either be done using cloudshell, or console. 
+
+ kubectl is a CLI interface to communicate with the cluster. Pods and their information can be seen using kubecl. The commands can be found at - https://kubernetes.io/docs/reference/kubectl/overview/
+
+
+>Install and Initialize API:
+Download latest cloud sdk for your OS using the link - https://cloud.google.com/sdk/docs/#deb
+
+>Import the google cloud public key
+
+ $echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+ 
+>Check the authenticity of the key using gnupg
+
+$sudo apt-get install apt-transport-https ca-certificates gnupg
+ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg 
+
+>Update and install sdk
+ $sudo apt-get update && sudo apt-get install google-cloud-sdk
+ google-cloud-sdk-app-engine-go
+ sudo apt-get install google-cloud-sdk-app-engine-go
+
+>Install docker and add your user to docker group:
+$sudo usermod -a -G docker $USER
+
+>Check if the user is added using:
+$groups
+
+>Get gcloud started using:
+$gcloud init
+
+>Configure docker to to use gcloud CLI as its credential helper
+$ gcloud auth configure-docker
+
+This command will automatically create a .docker file in the current directory. Thus authentication requests to container registry
+
+
+>Tag and push to container register
+Build your docker image locally and have an image ready. To deploy it on GKE, you need to first push it to Google Container Registry.
+
+Before that, 
+tag the image using the following command :
+ $docker tag <image> gcr.io/<gcp-project-id>/<image>:<version>
+
+Example : docker tag listing gcr.io/airbnb-259801/listing:1.0
+
+Push this image to the container registry :
+$docker push gcr.io/airbnb-259801/listing:1.0
+
+>Deploy the container
+Choose deploy option for your cluster on Kubernetes Dashboard (manually deploy dashboard also) or from Workloads tab.
+
+Choose the existing container option, and choose the newly pushed container id.
+
+Environmental variables – optional.
+
+Continue, and review your .ymal file properly. 
+Click on deploy.
+
+>Exposing load balancer
+Go to services tab in Navigation pane, choose your deployed cluster, opt for EXPOSE and give desired port and select Load balancer. This will attach a load balancer and give a public IP accessed from the internet.
+
+
+
+
+References
+[1] https://cloud.google.com/
+[2] https://kubernetes.io/docs/reference/kubectl/overview/
