@@ -15,7 +15,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
 	"gopkg.in/mgo.v2"
-    "gopkg.in/mgo.v2/bson"
+   	 "gopkg.in/mgo.v2/bson"
+   	"github.com/rs/cors"
 )
 
 // MongoDB Config
@@ -25,21 +26,28 @@ import (
 // var mongo_admin_database = os.Getenv("ADMIN_DATABASE")
 // var mongo_username = os.Getenv("USERNAME")
 // var mongo_password = os.Getenv("PASSWORD")
-var mongodb_server = "127.0.0.1"
-var mongodb_database = "admin"
+var mongodb_server = "54.145.95.122"
+var mongodb_database = "test"
 var mongodb_collection = "profile"
 var mongo_admin_database = "admin"
-var mongo_username = "admin"
-var mongo_password = "9210"
+var mongo_username = ""
+var mongo_password = ""
+
 
 // NewServer configures and returns a Server.
 func NewServer() *negroni.Negroni {
 	formatter := render.New(render.Options{
 		IndentJSON: true,
 	})
+	corsObj := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
+		AllowedHeaders: []string{"Accept", "content-type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"},
+	})
 	n := negroni.Classic()
 	mx := mux.NewRouter()
 	initRoutes(mx, formatter)
+	n.Use(corsObj)
 	n.UseHandler(mx)
 	return n
 }
@@ -47,7 +55,7 @@ func NewServer() *negroni.Negroni {
 // API Routes
 func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping",pingHandler(formatter)).Methods("GET")
-	mx.HandleFunc("/profile", profileHandler(formatter)).Methods("GET")
+	mx.HandleFunc("/profile/{id}", profileHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/profile", profileUpdateHandler(formatter)).Methods("PUT")
 	mx.HandleFunc("/profile", createProfileHandler(formatter)).Methods("POST")
 	//mx.HandleFunc("/profile/{id}", getProfileByIdHandler(formatter)).Methods("GET")
@@ -123,6 +131,7 @@ func createProfileHandler(formatter *render.Render) http.HandlerFunc {
 // GET profile Handler
 func profileHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+temp := mux.Vars(req)["id"]
 		var profile Profile
 		_ = json.NewDecoder(req.Body).Decode(&profile)
 		fmt.Println("profile:", profile.ProfileId)
@@ -141,8 +150,8 @@ func profileHandler(formatter *render.Render) http.HandlerFunc {
         session.SetMode(mgo.Monotonic, true)
         c := session.DB(mongodb_database).C(mongodb_collection)
 		var result Profile
-		query := bson.M{"_id": profile.ProfileId}
-		
+		//query := bson.M{"_id": profile.ProfileId}
+		query := bson.M{"UserId": temp}
 		if err =c.Find(query).One(&result);err != nil {
 			
 				formatter.JSON(w, http.StatusInternalServerError, err.Error())}
