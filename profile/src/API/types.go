@@ -12,18 +12,19 @@ import (
 )
 
 type Profile struct {
-	ProfileId     bson.ObjectId `json:"profileId" bson:"_id"`
+	ProfileId     bson.ObjectId `json:"ProfileId" bson:"_id"`
 	//ProfileId     string  `json:"profileId" bson:"profileId"`
-	UserId        string  `json:"userId" bson:"userId"`
-	FirstName 	  string  `json:"firstName" bson:"firstName"`
-	LastName 	  string  `json:"lastName" bson:"lastName"`
-	Email         string  `json:"email" bson:"email"`
-	City          string  `json:"city" bson:"city"`
-	Description   string  `json:"description" bson:"description"`
-	Gender        string  `json:"gender" bson:"gender"`
-	BirthDate     time.Time `json:"birthDate" bson:"birthDate"`
-	Languages	  string   `json:"languages" bson:"languages"`
-	Photo	      string   `json:"photo" bson:"photo"`
+	UserId        string  `json:"UserId" bson:"UserId"`
+	FirstName 	  string  `json:"FirstName" bson:"FirstName"`
+	LastName 	  string  `json:"LastName" bson:"LastName"`
+	Email         string  `json:"Email" bson:"Email"`
+	City          string  `json:"City" bson:"City"`
+	Description   string  `json:"Description" bson:"Description"`
+	Gender        string  `json:"Gender" bson:"Gender"`
+	BirthDate     time.Time `json:"BirthDate" bson:"BirthDate"`
+	Languages	  string   `json:"Languages" bson:"Languages"`
+	Photo	      string   `json:"Photo" bson:"Photo"`
+	Phone         string  	`json:"Phone" bson:"Phone"`
 }
 
 

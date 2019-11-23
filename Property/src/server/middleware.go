@@ -23,9 +23,9 @@ import (
 
 // DB connection string for localhost mongoDB
 
-const connectionString = "mongodb+srv://admin:admin@cluster0-f9fkk.mongodb.net/test?retryWrites=true&w=majority"
+//const connectionString = "mongodb+srv://admin:admin@cluster0-f9fkk.mongodb.net/test?retryWrites=true&w=majority"
 //const connectionString = "mongodb -u admin -p mongo1234 --authenticationDatabase admin mongodb://primary:27017,secondary1:27017,secondary2:27017/?replicaSet=cmpe281"
-//const connectionString = "mongodb://admin:mongo1234@10.0.1.44:27017/?replicaSet=cmpe281"
+const connectionString = "mongodb://admin:mongo1234@10.0.1.147:27017/?replicaSet=cmpe281"
 
 // Database Name
 const dbName = "Property"
@@ -176,7 +176,14 @@ func UpdateProperty(w http.ResponseWriter, r *http.Request) {
 
 func update(listing Property, temp string) {
 	filter := bson.M{"propertyid": temp}
-	update := bson.M{"$set": bson.M{ "title": listing.Title, "description" : listing.Description,"street" : listing.StreetAddr,"city" : listing.City,"country" : 					listing.Country,"zip" : listing.ZipCode,"bed" : listing.Bedrooms,"bath" : listing.Bathrooms,"accomodates" : listing.Accomodates,"currency" : 					listing.Currency,"price" : listing.Price, "minstay" : listing.MinStay,"maxstay" : listing.MaxStay, "start" : listing.StartDate,"end" : 					listing.EndDate },}
+	update := bson.M{"$set": bson.M{ "title": listing.Title, "description" : listing.Description,"street" : listing.StreetAddr,"city" : listing.City,
+					"country" : listing.Country,"zip" : listing.ZipCode,"bed" : listing.Bedrooms,"bath" : listing.Bathrooms,
+					"accomodates" : listing.Accomodates,"currency" : listing.Currency,"price" : listing.Price, "minstay" : listing.MinStay,
+					"maxstay" : listing.MaxStay, "start" : listing.StartDate,"end" : listing.EndDate, "pbed" : listing.PropertyType.PrivateBed, 
+					"whole" : listing.PropertyType.Whole, "shared" : listing.PropertyType.Shared, "ac" : listing.Amenities.Ac,
+					"heater" : listing.Amenities.Heater, "tv" : listing.Amenities.TV, "wifi" : listing.Amenities.Wifi, 
+					"kitchen" : listing.Spaces.Kitchen, "closets" : listing.Spaces.Closets, "parking" : listing.Spaces.Parking, "gym" :listing.Spaces.Gym,
+					 "pool" : listing.Spaces.Pool },}
 	result := collection.FindOneAndUpdate(context.Background(), filter, update)
 	fmt.Println("hi" , listing.PropertyType.Whole)	
 	fmt.Println(result)
