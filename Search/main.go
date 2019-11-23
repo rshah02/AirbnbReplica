@@ -50,10 +50,16 @@ func getPropertiesbyCity(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")        
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")       
 
 	params := mux.Vars(r)["city"]	
 
+	 //get from redis cache
+      var key string = params["city"]       
+      log.Print("cty: %v\n", key)
+      var props, err = redisclient.Get(key).Result()
+	
+	if err != nil { 
 	filter := bson.M{"city": params}
 	cur, err := collection.Find(context.Background(), filter)
 	if err != nil {
@@ -66,62 +72,15 @@ func getPropertiesbyCity(w http.ResponseWriter, r *http.Request) {
 		if e != nil {
 			log.Fatal(e)
 		}
-	results = append(results, result)
+	results = append(results, result)  
+	}
+	//insert into redis cache
+        value := results
+		err = redisclient.Set(key, value, 0).Err()
+	
 }
 	json.NewEncoder(w).Encode(results)
-
-
-}
- /*       
-        //var p Property
-        //_ = json.NewDecoder(r.Body).Decode(&p)
-//        var prop []Property
-        
-        //get from redis cache
-      //  var key string = params["city"]
-        
-        //log.Print("cty: %v\n", key)
-        
-  //      var props, err = redisclient.Get(key).Result()
-        
-    //    log.Print(props)
-        //var results []Property
-        
-       // if err != nil {
-           
-        filter := bson.M{"City": params["city"]}           
-        //fetch from db
-        cur, err1 := collection.Find(context.Background(), filter)
-        
-
-
-        log.Print(cur)
-        //var prop Property
-        //err1 := collection.Find(context.Background(), filter).All(&prop)
-        //log.Print("prop taken: %v\n", prop.City)
-        if err1 != nil {
-                 fmt.Println(err1)
-                return
-        }
-       var results []primitive.M
- 
-        for cur.Next(context.Background()) {
-                var result bson.M
-                e := cur.Decode(&result)
-                if e != nil {
-                        log.Fatal(e)
-                }
-        results = append(results, result)
-        }
-        json.NewEncoder(w).Encode(results)
-        //insert into redis cache
-//        value := results
-  //      err = redisclient.Set(key, value, 0).Err()*/
-    //    }
-        // else {
-                //json.Unmarshal([]byte(props), &results)
-//	}
-
+} 
 
 func initDb() {
 	// Set client options
