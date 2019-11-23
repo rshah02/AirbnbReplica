@@ -31,5 +31,6 @@
 
 10. **FireBase**:
 
-
+## Architecture Diagram:
+![alt text](281Diagram3.png)
 
