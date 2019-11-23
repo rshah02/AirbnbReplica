@@ -56,50 +56,59 @@ Profile:
 	}
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 Property:
-	{	'PropertyId' : String,
-    'Title' : String,
-    'Description' : String,
-    'Country' : String,
-    'StreetAddress' :String,
-    'City' : String,
-    'State' : String,
-    'ZipCode' : String,
-    'PropertyType' :String,
-    'Bedrooms' : Number,
-    'Accomodates' :Number,
-    'Bathrooms': Number,
-    'Photos' : String,
-    'Currency' : String,
-    'Baserate' : String,
-    'AvailabilityStartDate': Date,
-    'AvailabilityEndDate': Date,
-    'MinStay' : Number,
-	'Ownername' : String,
-	'UserId':String
+	{
 	
-		aminities: (array of Strings)[essentials,air conditioning,heat,closets,iron,Tv,wifi,breakfast]
-				]
+PropertyId    string      
+Username      string      
+UserId        string      
+Title         string      
+Description   string      
+StreetAddr    string      
+City          string      
+Country       string      
+ZipCode       string      
+Bedrooms      string      
+Bathrooms     string      
+Accomodates   string      
+Currency      string      
+Price         string      
+MinStay       string      
+MaxStay       string      
+StartDate     string      
+EndDate       string      
+PropertyType  PropertyType
+Amenities     Amenities   
+Spaces        Spaces      
+Image         string      
 
-		spaces to use (array of strings):[kitchen,laundry-washer,parking,Gym,pool]
+}
+
+PropertyType struct {
+   PrivateBed      bool  
+   Whole           bool  
+   Shared          bool 
+ }
+ 
+ type Amenities struct {
+        
+        Ac      bool     
+        Heater  bool     
+        TV      bool     
+        Wifi    bool     
+}
 
 
+type Spaces struct {
+        
+        Kitchen  bool  
+        Closets  bool  
+        Parking  bool  
+        Gym      bool  
+        Pool     bool  
+        
+}
 
-		photos:[array of Strings] save this in s3 bucket . save url in mongodb schema
- 		
-		}
---------------------------------------------------------------------------------------------------------------------------------------------------
-Payment: //This should be handled by mysql database if possible. Nosql Databases are not secured enough to save confidential data.
-		{
-			paymentId,
-			userId,
-			firstname,
-			lastname,
-			cardnumber,
-			expiry,
-			cvv,
-			zip,
-			country
-		}
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Booking:
@@ -233,7 +242,7 @@ UPDATE profile:
 
 
 //********************************************************************************************************************//	
-Property API
+Property API (Example)
 
 4. Post a property
 	Request URI: /property/addProperty:
@@ -241,58 +250,67 @@ Property API
 
 	request.body:
 
-		userId:(String)
-		Title:(String)
-		isAvailable: (Boolean)
-		type: (array of string)[whole,privateRoom,sharedRoom]
-		guests:(Integer) upto 4
-		location: city/state/country
-		 service: 1. apartment
-			  2. house
-		description:(String)
-		bedrooms:(Integer)
-		bathrooms:(Integer)
-		address: (json object)
-			{
-			 country
-			 street
-			 aptNo
-			 city
-			 state	
-			 zipCode
-
-			}
-		checkinperiod:(integer) (max 7 days)
-		checkinTime: (String)
-		checkoutTime:(String)	
-		Price: (Integer)
-		Currency: (String)		
-		aminities: (array of Strings)[essentials,air conditioning,heat,closets,iron,Tv,wifi,breakfast]
-				]
-
-		spaces to use (array of strings):[kitchen,laundry-washer,parking,Gym,pool]
-
-
-
-		photos:[array of Strings] save this in s3 bucket . save url in mongodb schema
-
+		{
+        "Accomodates": "40",
+        "Amenities": {
+            "Ac": true,
+            "Heater": true,
+            "TV": true,
+            "Wifi": true
+        },
+        "Bathrooms": "1",
+        "Bedrooms": "1",
+        "City": "San Jose",
+        "Country": "USA",
+        "Currency": "$",
+        "Description": "OPEN",
+        "EndDate": "19-9-2019",
+        "MaxStay": "3",
+        "MinStay": "2",
+        "Price": "1000",
+        "PropertyType": {
+            "PrivateBed": false,
+            "Shared": false,
+            "Whole": false
+        },
+        "Spaces": {
+            "Closets": false,
+            "Gym": false,
+            "Kitchen": false,
+            "Parking": false,
+            "Pool": false
+        },
+        "StartDate": "24-9-2019",
+        "StreetAddr": "4388999",
+        "Title": "New opening coming soon, yaaaaaayayayaayayya aaaaaaaaaaaaaaaaaaaaaaaaaaaas",
+        "UserId": "10011",
+        "Username": "Rohan",
+        "ZipCode": "95050",
+        "image": "download1.jpeg"
+    }
 
 	Response.json{message:Success,property :object}
 /*-----------------------------------------------------------------------------------------------------------------------------------*/
 
 GET property Details:
 
-	Request URI: /property/propertyId:
+	Request URI: /property/{propertyId}:
 	Method: GET
 
 	Response:{property object}
+	
+	Request URI: /property1/{userId}:
+	Method: GET
+
+	Response:arrays of property objects
+	
 
 
 
 /*-----------------------------------------------------------------------------------------------------------------------------------*/
 
 UPDATE Property:
-	Request URI: /property/propertyId:
+	Request URI: /property/{propertyId):
 	Method: PUT
 	Reequest.body: 
 			{
@@ -300,49 +318,19 @@ UPDATE Property:
 			updatekey:value
 				}
 	Response:{property object}
+/*---------------------------------------------------------------------------------------------------------------------------
+
+DELETE Property
+	Request URIL /property/{propertyId}
+	Method: DELETE
+	
+	Response: Status 200 OK
 
 
 
 
 
-/**************************************************************************************************************************************/
 
-Payment API:
-
-
-5 .Payment methods:(array of objects): 
-
-	Request URI: /payments/addPayment:
-	Method: POST
-
-	Request.body:
-			{userId,
-			firstname,
-			lastname,
-			cardnumber,
-			expiry,
-			cvv,
-			zip,
-			country}
-
-	Response: {payment object}
-/*----------------------------------------------------------------------------------------------------------------------------------------------*/
-Get payment method details:
-
-	Request URI: /payments:
-	Method: GET
-
-	Response:
-		[array of {payment objects}]
-
-/*---------------------------------------------------------------------------------------------------------------------------------------------*/
-
-Delete payment method details:
-
-	Request URI: /payments/removePayment:
-	Method: Delete
-	request.body{paymentId:value}
-	Response:{message:value}
 
 
 /********************************************************************************************************************************************/
