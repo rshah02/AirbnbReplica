@@ -128,41 +128,6 @@ func insertOneListing(task models.Property) {
 }
 
 
-//GetAllProperty get all the property route
-func GetAllProperty(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Methods", "GET")
-	payload := getAllProperty()
-	json.NewEncoder(w).Encode(payload)
-}
-
-func getAllProperty() []primitive.M {
-	cur, err := collection.Find(context.Background(), bson.D{{}})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var results []primitive.M
-	for cur.Next(context.Background()) {
-		var result bson.M
-		e := cur.Decode(&result)
-		if e != nil {
-			log.Fatal(e)
-		}
-		// fmt.Println("cur..>", cur, "result", reflect.TypeOf(result), reflect.TypeOf(result["_id"]))
-		results = append(results, result)
-		fmt.Println("\n \n")
-	}
-
-	if err := cur.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	cur.Close(context.Background())
-	return results
-}
 //Update a single property
 
 
@@ -194,18 +159,49 @@ func update(listing models.Property, temp string) {
 	fmt.Println(result)
 
 }
+
+
+
+//GetAllProperty get all the property route
+
+func GetManyProperty(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	params := mux.Vars(r)["user"]
+
+	filter := bson.M{"
+UserId": params}
+	cur, err := collection.Find(context.Background(), filter)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var results []primitive.M
+	for cur.Next(context.Background()) {
+		var result bson.M
+		e := cur.Decode(&result)
+		if e != nil {
+			log.Fatal(e)
+		}
+	results = append(results, result)
+}
+	json.NewEncoder(w).Encode(results)
+}
+
 //Delete a single property
 
 func DeleteProperty(w http.ResponseWriter, r *http.Request) {
-/*	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+/*
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json")
 */	
-	if (*r).Method == "OPTIONS" {
+	/*if (*r).Method == "OPTIONS" {
 		return
-	}
+	}*/
 
 	params := mux.Vars(r)["id"]
 	var listing1 models.Property
@@ -327,64 +323,4 @@ func exitErrorf(msg string, args ...interface{}) {
     fmt.Fprintf(os.Stderr, msg+"\n", args...)
     os.Exit(1)
 }
-
-func GetManyProperty(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Content-Type", "application/json")
-
-	params := mux.Vars(r)["user"]
-
-	var listing models.Property
-		_ = json.NewDecoder(r.Body).Decode(&listing)
-
-	filter := bson.M{"UserId": params}
-
-	// find all documents
-	cursor, err := collection.Find(context.Background(), filter)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// iterate through all documents
-	for cursor.Next(context.Background()) {
-	    var p models.Property
-	    // decode the document
-	    if err := cursor.Decode(&p); err != nil {
-	    	log.Fatal(err)
-	    }
-	    	    
-	    sess, err := session.NewSession(&aws.Config{
-            Region: aws.String("us-east-1")},
-        	)
-	    svc := s3.New(sess)
-	    
-	    input := &s3.GetObjectInput{
-			Bucket: aws.String(bucket),
-			Key:    aws.String(p.Image),
-		}
-    	
-	     result, err := svc.GetObject(input)
-	     
-	     json.NewEncoder(w).Encode(p)
-	     if err != nil {
-		fmt.Println(err.Error())
-	     }
-	     
-	    // fmt.Println("Printing result")
-	     fmt.Println(result)
-	     }
-	     
-	     
-	     	    
-		// check if the cursor encountered any errors while iterating 
-	     if err := cursor.Err(); err != nil {
-			log.Fatal(err)
-	     }
-	
-
-}
-
 

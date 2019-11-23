@@ -10,13 +10,13 @@ type Property struct {
 	City	      string	   `json:"City" bson:"City"`
 	Country       string 	   `json:"Country" bson:"Country"`				
 	ZipCode	      string       `json:"ZipCode" bson:"ZipCode"`
-	Bedrooms      int          `json:"Bedrooms" bson:"Bedrooms"`
-	Bathrooms     int          `json:"Bathrooms" bson:"Bathrooms"`
-	Accomodates   int          `json:"Accomodates" bson:"Accomodates"`
+	Bedrooms      string          `json:"Bedrooms" bson:"Bedrooms"`
+	Bathrooms     string          `json:"Bathrooms" bson:"Bathrooms"`
+	Accomodates   string       `json:"Accomodates" bson:"Accomodates"`
 	Currency      string       `json:"Currency" bson:"Currency"`
-	Price	      int	   `json:"Price" bson:"Price"`	
-	MinStay       int          `json:"MinStay" bson:"MinStay"`
-	MaxStay       int          `json:"MaxStay" bson:"MaxStay"`
+	Price	      string	   `json:"Price" bson:"Price"`	
+	MinStay       string       `json:"MinStay" bson:"MinStay"`
+	MaxStay       string       `json:"MaxStay" bson:"MaxStay"`
 	StartDate     string	    `json:"StartDate" bson:"StartDate"`
 	EndDate       string	    `json:"EndDate" bson:"EndDate"`
  	PropertyType  PropertyType  `json:"PropertyType" bson:"PropertyType"`
