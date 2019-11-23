@@ -12,3 +12,4 @@ func NewRedisServer() *redis.Client {
 	})
 
   return client
+}
