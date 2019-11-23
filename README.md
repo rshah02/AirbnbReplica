@@ -3,11 +3,11 @@
 ## Team - MARSS
 
 ## Team Members:
-Jaya Sindhu Manda
-Rohan
-Apeksha
-Mrinalini
-Sidhesh
+Markup : * Jaya Sindhu Manda
+         * Rohan
+         * Apeksha
+         * Mrinalini
+         * Sidhesh
 
 ## Summary:
 1. Microservices : We have used Golang for the development of all the services like Login, Profile creation, Property Publishing, Property searching and Booking.
