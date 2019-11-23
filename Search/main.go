@@ -12,6 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/gorilla/mux"
 	"github.com/go-redis/redis"
@@ -48,24 +49,41 @@ func updateCache(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(props)
 }
 
-func getPropertiesbyCity(w http.ResponseWriter, r *http.Request) {
+/*func getPropertiesbyCity(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-
+	
+	//var p Property
+	//_ = json.NewDecoder(r.Body).Decode(&p)
+	var prop []Property
+	
 	//get from redis cache
 	var key string = params["city"]
+	
+	log.Print("cty: %v\n", key)
+	
 	var props, err = redisclient.Get(key).Result()
-	var results []Property
+	
+	log.Print(props)
+	//var results []Property
 
 	if err != nil {
     	   
+	filter := bson.M{"City": params["city"]}	   
 	//fetch from db
-	cur, err1 := collection.Find(context.Background(), bson.M{"City": params["city"]})
+	cur, err1 := collection.Find(context.Background(), filter)
+	
+
+
+	log.Print(cur)
+	//var prop Property
+	//err1 := collection.Find(context.Background(), filter).All(&prop)
+	//log.Print("prop taken: %v\n", prop.City)
 	if err1 != nil {
-		 fmt.Println("City not found.")
+		 fmt.Println(err1)
 		return
 	}
 
-	for cur.Next(context.Background()) {
+	/*for cur.Next(context.Background()) {
 		var result Property
 		e := cur.Decode(&result)
 		if e != nil {
@@ -76,12 +94,175 @@ func getPropertiesbyCity(w http.ResponseWriter, r *http.Request) {
 	
 	//insert into redis cache
     	value := results
-	err = redisclient.Set(key, value, 0).Err()
-	} else {
-		json.Unmarshal([]byte(props), &results)
-	}
+	err = redisclient.Set(key, value, 0).Err()*/
+//	}
+	// else {
+		//json.Unmarshal([]byte(props), &results)
+	//}
 
-	json.NewEncoder(w).Encode(results)
+	//json.NewEncoder(w).Encode(results)
+//	json.NewEncoder(w).Encode(prop)
+//}i
+
+
+/*func getPropertiesbyCity(w http.ResponseWriter, r *http.Request) {
+        params := mux.Vars(r)
+        
+        //var p Property
+        //_ = json.NewDecoder(r.Body).Decode(&p)
+        var prop []Property
+        
+        //get from redis cache
+        var key string = params["city"]
+        
+        log.Print("cty: %v\n", key)
+        
+        var props, err = redisclient.Get(key).Result()
+        
+        log.Print(props)
+        //var results []Property
+        
+        if err != nil {
+           
+        filter := bson.M{"City": params["city"]}           
+        //fetch from db
+        cur, err1 := collection.Find(context.Background(), filter)
+        
+
+
+        log.Print(cur)
+        //var prop Property
+        //err1 := collection.Find(context.Background(), filter).All(&prop)
+        //log.Print("prop taken: %v\n", prop.City)
+        if err1 != nil {
+                 fmt.Println(err1)
+                return
+        }
+        
+        /*for cur.Next(context.Background()) {
+                var result Property
+                e := cur.Decode(&result)
+                if e != nil {
+                        log.Fatal(e)
+                }
+        results = append(results, result)
+        }
+        
+        //insert into redis cache
+        value := results
+        err = redisclient.Set(key, value, 0).Err()*/
+       // }
+        // else {
+                //json.Unmarshal([]byte(props), &results)
+	//}
+//}
+//*/
+
+
+/*
+func getPropertiesbyCity(w http.ResponseWriter, r *http.Request) {
+        params := mux.Vars(r)
+        
+        //var p Property
+        //_ = json.NewDecoder(r.Body).Decode(&p)
+        var prop []Property
+        
+        //get from redis cache
+        var key string = params["city"]
+        
+        log.Print("cty: %v\n", key)
+        
+        var props, err = redisclient.Get(key).Result()
+        
+        log.Print(props)
+        //var results []Property
+        
+        if err != nil {
+           
+        filter := bson.M{"City": params["city"]}           
+        //fetch from db
+        cur, err1 := collection.Find(context.Background(), filter)
+        
+
+
+        log.Print(cur)
+        //var prop Property
+        //err1 := collection.Find(context.Background(), filter).All(&prop)
+        //log.Print("prop taken: %v\n", prop.City)
+        if err1 != nil {
+                 fmt.Println(err1)
+                return
+        }
+    */    
+        /*for cur.Next(context.Background()) {
+                var result Property
+                e := cur.Decode(&result)
+                if e != nil {
+                        log.Fatal(e)
+                }
+        results = append(results, result)
+        }
+        
+        //insert into redis cache
+        value := results
+        err = redisclient.Set(key, value, 0).Err()*/
+  //      }
+        // else {
+                //json.Unmarshal([]byte(props), &results)
+//	}
+//}*/
+
+func getPropertiesbyCity(w http.ResponseWriter, r *http.Request) {
+        params := mux.Vars(r)
+        
+        //var p Property
+        //_ = json.NewDecoder(r.Body).Decode(&p)
+//        var prop []Property
+        
+        //get from redis cache
+      //  var key string = params["city"]
+        
+        //log.Print("cty: %v\n", key)
+        
+  //      var props, err = redisclient.Get(key).Result()
+        
+    //    log.Print(props)
+        //var results []Property
+        
+       // if err != nil {
+           
+        filter := bson.M{"City": params["city"]}           
+        //fetch from db
+        cur, err1 := collection.Find(context.Background(), filter)
+        
+
+
+        log.Print(cur)
+        //var prop Property
+        //err1 := collection.Find(context.Background(), filter).All(&prop)
+        //log.Print("prop taken: %v\n", prop.City)
+        if err1 != nil {
+                 fmt.Println(err1)
+                return
+        }
+       var results []primitive.M
+ 
+        for cur.Next(context.Background()) {
+                var result bson.M
+                e := cur.Decode(&result)
+                if e != nil {
+                        log.Fatal(e)
+                }
+        results = append(results, result)
+        }
+        json.NewEncoder(w).Encode(results)
+        //insert into redis cache
+//        value := results
+  //      err = redisclient.Set(key, value, 0).Err()*/
+    //    }
+        // else {
+                //json.Unmarshal([]byte(props), &results)
+//	}
 }
 
 func initDb() {
@@ -108,7 +289,7 @@ func initDb() {
 
 }
 
-func GetRedisServer() bool {
+/*func GetRedisServer() bool {
 	fmt.Println("Connecting to Redis server..")
   	redisclient = NewRedisServer()
 
@@ -121,8 +302,16 @@ func GetRedisServer() bool {
 
   	fmt.Println(pong)
   	return true
-}
+}*/
 
+func pingHandler(w http.ResponseWriter, req *http.Request) {
+	log.Print("ping")
+	mapD := map[string]string{"message": "API Working"}
+	mapB, _ := json.Marshal(mapD)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	w.Write(mapB)
+}
 
 func main() {
 
@@ -130,10 +319,12 @@ func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", homeLink)
 	router.HandleFunc("/updatecache", updateCache).Methods("POST")
-	router.HandleFunc("/search", getPropertiesbyCity).Methods("GET")
-	if GetRedisServer() {
+	router.HandleFunc("/search/get/{city}", getPropertiesbyCity).Methods("GET")
+	router.HandleFunc("/search/ping", pingHandler).Methods("GET")
+	
+	/*if GetRedisServer() {
 		log.Fatal(http.ListenAndServe(":8080", router))
 	} else {
 	fmt.Println("Server startup failed")
-	}
+	}*/
 }
