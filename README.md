@@ -23,13 +23,15 @@
 
 6. **MongoDB Sharding**: As the size of the data increase, data partitioning becomes very important. For setting this, we created two sharded cluster, two config servers, and one mongos for each service.
 
-7. **GKE(Kubernetis)**:
+7. **GKE(Kubernetis)**: Google kubernetis is used to deploy docker instance which in turn connected to API Gate way.
 
-8. **SNS**:
+8. **SNS**: AWS SNS is used to notify the customers regarding their booking updastes. For every booking corresponding user is subscribed and updates are being sent to registered e-mail id's.
 
-9. **S3**:
+9. **S3**: To store property images S3 Bucket is used. 
 
-10. **FireBase**:
+10. **FireBase**: For authentication purposes.
+
+11. AWS API Gateway: All the LB's and kubernetis IP is configured in API Gateway.
 
 ## Architecture Diagram:
 ![alt text](281Diagram3.png)
