@@ -2,14 +2,14 @@
 
 ## Team - MARSS
 
-##Team Members:
+## Team Members:
 Jaya Sindhu Manda
 Rohan
 Apeksha
 Mrinalini
 Sidhesh
 
-##Summary:
+## Summary:
 1. Microservices : We have used Golang for the development of all the services like Login, Profile creation, Property Publishing, Property searching and Booking.
 
 2. MongoDB: For storing the users data and consistent fast retrieval, We chose mongo db. Since mongo db is a non-SQL database, it is very convenient to store the data without strict schema definition.
