@@ -10,7 +10,14 @@
     4. Mrinalini - Users API, Firebase authentication
     5. Siddesh - Search API, Redis Cache
 
-## Summary:
+## Summary of Project:
+It is similar to AIRBNB where a propert owner and customer can login. Property owner to register their property. Customer to book a property. A customer can search a property and book a property. After booking a property notification will be sent to customer from configured SNS based on the details provided by customer during booking.
+
+## Architecture Diagram:
+![alt text](281Diagram3.png)
+
+
+## Summary of Key Features:
 1. **Microservices** : We have used Golang for the development of all the services like Login, Profile creation, Property Publishing, Property searching and Booking.
 
 2. **MongoDB**: For storing the users data and consistent fast retrieval, We chose mongo db. Since mongo db is a non-SQL database, it is very convenient to store the data without strict schema definition.
@@ -33,6 +40,41 @@
 
 11. AWS API Gateway: All the LB's and kubernetis IP is configured in API Gateway.
 
-## Architecture Diagram:
-![alt text](281Diagram3.png)
+## Team Contributions:
+
+- Jaya Sindhu Manda:
+	- Intial POC using GO+MONGO+REST -> Done (11-Nov)
+	- Docker configuration for the Go API -> Done (13-Nov)
+	- Backend API Development for Booking -> Done (16-Nov)
+	- Backend API integrating with mongo cluster -> Done (19-Nov)
+	- SNS Implementation as part of Booking,Updation and Deletion (To notify user with booking ID)-> Done (19-Nov)
+	- API Gateway configuration -> Done
+	- AWS Cloud Formation - Done
+         
+ - Rohan:
+	- Create an API contract
+         - Develop Backend API for User profile
+	- Build frontend Web application using React.js
+	- Integrate all the APIs with frontend 
+	- Deploy frontend on Heroku platform
+         
+- Apeksha:
+	- Create/update/get/delete Listings API
+	- s3 bucket implementation for all CRUD operations -
+	- Kubernetes Deployment 
+	- VPC Link	
+
+- Mrinalini:
+	- Evaluate CI/CD Tools 
+	- Develop backend API for login/sign up	
+	- Setting up mongo db cluster and integration with user apis
+	- Investigate firebase and Auth0 authentication mechanisms
+	- Implement user authentication using firebase 
+
+- Siddesh:
+	- Backend API development for Search - Done
+	- Backend API intergration with mongo cluster - Done
+	- VPC Peering - In Progress
+	- Kubernetes Deployment - In Progress
+
 
