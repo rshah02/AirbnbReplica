@@ -70,10 +70,12 @@ func init() {
 
 // CreateProperty create property route
 func CreateProperty(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	/*w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Content-Type", "application/json")
+*/
 	u, err := uuid.NewV4()
 	/*params := mux.Vars(r)
 	if err != nil {
@@ -130,6 +132,8 @@ func insertOneListing(task models.Property) {
 func GetAllProperty(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Methods", "GET")
 	payload := getAllProperty()
 	json.NewEncoder(w).Encode(payload)
 }
@@ -163,7 +167,14 @@ func getAllProperty() []primitive.M {
 
 
 func UpdateProperty(w http.ResponseWriter, r *http.Request) {
+/*	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "PUT")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Content-Type", "application/json")
+*/
 	temp := mux.Vars(r)["id"]
+
 	fmt.Println("my temp is : ",temp)
 	var listing models.Property
 	_ = json.NewDecoder(r.Body).Decode(&listing)
@@ -172,10 +183,12 @@ func UpdateProperty(w http.ResponseWriter, r *http.Request) {
 }
 
 func update(listing models.Property, temp string) {
-	filter := bson.M{"propertyid": temp}
-	update := bson.M{"$set": bson.M{ "title": listing.Title, "description" : listing.Description,"street" : listing.StreetAddr,"city" : listing.City,                 						"country" : listing.Country,"zip" : listing.ZipCode,"bed" : listing.Bedrooms,"bath" : listing.Bathrooms,
-					"accomodates" : listing.Accomodates,"currency" : listing.Currency,"price" : listing.Price, "minstay" : listing.MinStay,
-					"maxstay" : listing.MaxStay, "start" : listing.StartDate,"end" : listing.EndDate, "ptype.pbed" : listing.PropertyType.PrivateBed, 						"ptype.whole" : listing.PropertyType.Whole, "ptype.shared" : listing.PropertyType.Shared, "amenities.ac" : listing.Amenities.Ac, 						"amenities.heater" : listing.Amenities.Heater, "amenities.tv" : listing.Amenities.TV, "amenities.wifi" : listing.Amenities.Wifi, 						"spaces.kitchen" : listing.Spaces.Kitchen, "spaces.closets" : listing.Spaces.Closets, "spaces.parking" : listing.Spaces.Parking, 						"spaces.gym" : listing.Spaces.Gym, "spaces.pool" : listing.Spaces.Pool },}
+	filter := bson.M{"PropertyId": temp}
+	update := bson.M{"$set": bson.M{ "Title": listing.Title, "Description" : listing.Description,"StreetAddr" : listing.StreetAddr,"City" : listing.City,                 						"Country" : listing.Country,"ZipCode" : listing.ZipCode,"Bedrooms" : listing.Bedrooms,"Bathrooms" : listing.Bathrooms,
+					"Accomodates" : listing.Accomodates,"Currency" : listing.Currency,"Price" : listing.Price, "MinStay" : listing.MinStay,
+					"MaxStay" : listing.MaxStay, "StartDate" : listing.StartDate,"EndDate" : listing.EndDate,
+					 "PropertyType.PrivateBed" : listing.PropertyType.PrivateBed,"PropertyType.Whole" : listing.PropertyType.Whole,
+					 "PropertyType.Shared" : listing.PropertyType.Shared, "Amenities.Ac" : listing.Amenities.Ac, 						"Amenities.Heater" : listing.Amenities.Heater, "Amenities.TV" : listing.Amenities.TV, "Amenities.Wifi" : listing.Amenities.Wifi, 						"Spaces.Kitchen" : listing.Spaces.Kitchen, "Spaces.Closets" : listing.Spaces.Closets, "Spaces.Parking" : listing.Spaces.Parking, 						"Spaces.Gym" : listing.Spaces.Gym, "Spaces.Pool" : listing.Spaces.Pool },}
 	result := collection.FindOneAndUpdate(context.Background(), filter, update)
 	fmt.Println("hi" , listing.PropertyType.Whole)	
 	fmt.Println(result)
@@ -184,16 +197,21 @@ func update(listing models.Property, temp string) {
 //Delete a single property
 
 func DeleteProperty(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+/*	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	
+	w.Header().Set("Content-Type", "application/json")
+*/	
+	if (*r).Method == "OPTIONS" {
+		return
+	}
+
 	params := mux.Vars(r)["id"]
 	var listing1 models.Property
 	var task models.Property
 	task = listing1
-	filter1 := bson.M{"propertyid": params}
+	filter1 := bson.M{"PropertyId": params}
 	err := collection.FindOne(context.Background(), filter1).Decode(&listing1)
 	
 //	fmt.Println("Task image is : ", task.Image)
@@ -237,7 +255,7 @@ func DeleteProperty(w http.ResponseWriter, r *http.Request) {
 // delete one task from the DB, delete by ID
 func deleteOneTask(listing1 models.Property, params string) {
 	
-	filter := bson.M{"propertyid": params}
+	filter := bson.M{"PropertyId": params}
 	result, err := collection.DeleteOne(context.Background(), filter)
 	
 	fmt.Println("dEleted from db")
@@ -252,9 +270,10 @@ func deleteOneTask(listing1 models.Property, params string) {
 //Get a single record
 
 func GetProperty(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("content-type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	
 	params := mux.Vars(r)["id"]
 
@@ -263,7 +282,7 @@ func GetProperty(w http.ResponseWriter, r *http.Request) {
 //	_ = json.NewDecoder(r.Body).Decode(&task)
 
 //	fmt.Println("get id is : %q ", getid)
-	filter := bson.M{"propertyid": params}
+	filter := bson.M{"PropertyId": params}
 
 	err := collection.FindOne(context.Background(), filter).Decode(&task)
 	fmt.Println("Task image is : %q ", task.Image)
@@ -310,18 +329,18 @@ func exitErrorf(msg string, args ...interface{}) {
 }
 
 func GetManyProperty(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("content-type", "application/json")
+	w.Header().Set("Content-type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
+	w.Header().Set("Content-Type", "application/json")
 
 	params := mux.Vars(r)["user"]
 
 	var listing models.Property
 		_ = json.NewDecoder(r.Body).Decode(&listing)
 
-	filter := bson.M{"userid": params}
+	filter := bson.M{"UserId": params}
 
 	// find all documents
 	cursor, err := collection.Find(context.Background(), filter)
