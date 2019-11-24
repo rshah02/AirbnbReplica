@@ -77,7 +77,7 @@ class Login extends Component {
 
 
         // this.props.submitLogin(data);
-        axios.post('https://ec2-18-236-158-50.us-west-2.compute.amazonaws.com:3000/users/login', data)
+        axios.post('http://ec2-18-236-158-50.us-west-2.compute.amazonaws.com:3000/users/login', data)
             .then(response => {
                 console.log(response);
                 if (response.status === 200) {                 
