@@ -15,7 +15,7 @@
 It is similar to AIRBNB where a propert owner and customer can login. Property owner to register their property. Customer to book a property. A customer can search a property and book a property. After booking a property notification will be sent to customer from configured SNS based on the details provided by customer during booking.
 
 ## Architecture Diagram:
-![alt text](https://github.com/nguyensjsu/fa19-281-marss/blob/master/Documentation/Architecture.PNG)
+![alt text](https://github.com/nguyensjsu/fa19-281-marss/blob/master/Documentation/Architecture.png)
 
 
 ## Summary of Key Features:
