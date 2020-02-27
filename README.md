@@ -6,7 +6,7 @@
 ## Team Members and work done:
          
     1. Jaya Sindhu Manda - Bookings API and AWS Gateway, SNS
-    2. Rohan - Frontend, Mongo sharding, Profile API
+    2. Rohan - Frontend, Mongo sharding, Profile API, Architecture,demo
     3. Apeksha - Poperty listing API, AWS gateway, Kuberneted, S3 bucket
     4. Mrinalini - Users API, Firebase authentication
     5. Siddesh - Search API, Redis Cache
