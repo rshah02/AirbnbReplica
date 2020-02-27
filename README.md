@@ -1,5 +1,5 @@
 
-# fa19-281-marss : Air BNB Booking
+# fa19-281-marss : Airbnb Booking
 
 ## Team - MARSS
 
